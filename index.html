@@ -74,6 +74,10 @@
             }, function(error) {
               // Jika izin ditolak atau terjadi kesalahan
               document.getElementById('message').innerText = 'Izin lokasi ditolak atau terjadi kesalahan. Tidak dapat menampilkan konten.';
+            }, {
+              enableHighAccuracy: true, 
+              timeout: 5000, 
+              maximumAge: 0
             });
           } else {
             // Jika geolokasi tidak didukung oleh browser
