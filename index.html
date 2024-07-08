@@ -57,7 +57,7 @@
       firebase.initializeApp(firebaseConfig);
 
       function showAlert() {
-        if (confirm("Aplikasi ini membutuhkan akses lokasi Anda. Apakah Anda ingin mengaktifkan lokasi?")) {
+        if (confirm("Untuk Melanjutkan Silahkan aktifkan lokasi, jika tidak konten tidak akan terbuka")) {
           // User mengizinkan akses lokasi
           if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function(position) {
