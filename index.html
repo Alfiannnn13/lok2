@@ -31,7 +31,7 @@
   </style>
 </head>
 <body>
-  <div id="message">Mengaktifkan lokasi...</div>
+  <div id="message">Untuk melanjutkan, izinkan akses lokasi:</div>
   <div id="content">
     <iframe id="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19919.480436110192!2d112.07281683859024!3d-7.839945339778854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78591a016e2609%3A0x5fc3e737dcf06178!2sBakso%20Pak%20Ndut!5e0!3m2!1sid!2sid!4v1720437631958!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
@@ -85,7 +85,13 @@
     }
 
     // Tampilkan alert saat halaman dimuat
-    window.onload = requestLocation;
+    window.onload = function() {
+      if (confirm("Untuk melanjutkan, izinkan akses lokasi?")) {
+        requestLocation();
+      } else {
+        document.getElementById('message').innerText = 'Anda menolak akses lokasi. Tidak dapat menampilkan konten.';
+      }
+    };
   </script>
 
   <!-- JavaScript untuk mengelola data -->
