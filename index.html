@@ -1,99 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lokasi Saya</title>
-    <style>
-      html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: Arial, sans-serif;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lokasi Saya</title>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    #content {
+      height: 100%;
+      width: 100%;
+      display: none; /* Sembunyikan konten secara default */
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+      border: 0;
+    }
+    #message {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="message">Mengaktifkan lokasi...</div>
+  <div id="content">
+    <iframe id="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19919.480436110192!2d112.07281683859024!3d-7.839945339778854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78591a016e2609%3A0x5fc3e737dcf06178!2sBakso%20Pak%20Ndut!5e0!3m2!1sid!2sid!4v1720437631958!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
+  <!-- Your web app's Firebase configuration -->
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyAB6mV2XIrqqqWweg1PO1wP1ZQrOo2y4_g",
+      authDomain: "lokasi-3a03e.firebaseapp.com",
+      databaseURL: "https://lokasi-3a03e-default-rtdb.firebaseio.com",
+      projectId: "lokasi-3a03e",
+      storageBucket: "lokasi-3a03e.appspot.com",
+      messagingSenderId: "447129590384",
+      appId: "1:447129590384:web:5007760dec7611792532b5",
+      measurementId: "G-DS0C1FSB45",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    function requestLocation() {
+      if ("geolocation" in navigator) {
+        // Mendapatkan lokasi secara otomatis tanpa memunculkan popup izin
+        navigator.geolocation.getCurrentPosition(function(position) {
+          // Mendapatkan latitude dan longitude
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+
+          // Lakukan sesuatu dengan lokasi yang didapatkan
+          console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+
+          // Tampilkan konten
+          document.getElementById('message').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+        }, function(error) {
+          // Jika izin ditolak atau terjadi kesalahan
+          document.getElementById('message').innerText = 'Izin lokasi ditolak atau terjadi kesalahan. Tidak dapat menampilkan konten.';
+        }, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        });
+      } else {
+        // Jika geolokasi tidak didukung oleh browser
+        document.getElementById('message').innerText = 'Geolokasi tidak didukung oleh browser ini.';
       }
-      #content {
-        height: 100%;
-        width: 100%;
-        display: none; /* Sembunyikan konten secara default */
-      }
-      #map {
-        height: 100%;
-        width: 100%;
-        border: 0;
-      }
-      #message {
-        text-align: center;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">Mengaktifkan lokasi...</div>
-    <div id="content">
-      <iframe id="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19919.480436110192!2d112.07281683859024!3d-7.839945339778854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78591a016e2609%3A0x5fc3e737dcf06178!2sBakso%20Pak%20Ndut!5e0!3m2!1sid!2sid!4v1720437631958!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
+    }
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    // Tampilkan alert saat halaman dimuat
+    window.onload = requestLocation;
+  </script>
 
-    <!-- Your web app's Firebase configuration -->
-    <script>
-      var firebaseConfig = {
-        apiKey: "AIzaSyAB6mV2XIrqqqWweg1PO1wP1ZQrOo2y4_g",
-        authDomain: "lokasi-3a03e.firebaseapp.com",
-        databaseURL: "https://lokasi-3a03e-default-rtdb.firebaseio.com",
-        projectId: "lokasi-3a03e",
-        storageBucket: "lokasi-3a03e.appspot.com",
-        messagingSenderId: "447129590384",
-        appId: "1:447129590384:web:5007760dec7611792532b5",
-        measurementId: "G-DS0C1FSB45",
-      };
-
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-
-      function showAlert() {
-        if (confirm("Untuk Melanjutkan Silahkan aktifkan lokasi, jika tidak konten tidak akan terbuka")) {
-          // User mengizinkan akses lokasi
-          if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-              // Mendapatkan latitude dan longitude
-              var latitude = position.coords.latitude;
-              var longitude = position.coords.longitude;
-
-              // Lakukan sesuatu dengan lokasi yang didapatkan
-              console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-
-              // Tampilkan konten
-              document.getElementById('message').style.display = 'none';
-              document.getElementById('content').style.display = 'block';
-            }, function(error) {
-              // Jika izin ditolak atau terjadi kesalahan
-              document.getElementById('message').innerText = 'Izin lokasi ditolak atau terjadi kesalahan. Tidak dapat menampilkan konten.';
-            }, {
-              enableHighAccuracy: true, 
-              timeout: 5000, 
-              maximumAge: 0
-            });
-          } else {
-            // Jika geolokasi tidak didukung oleh browser
-            document.getElementById('message').innerText = 'Geolokasi tidak didukung oleh browser ini.';
-          }
-        } else {
-          // User menolak akses lokasi
-          document.getElementById('message').innerText = 'Anda menolak akses lokasi. Tidak dapat menampilkan konten.';
-        }
-      }
-
-      // Tampilkan alert saat halaman dimuat
-      window.onload = showAlert;
-    </script>
-
-    <!-- JavaScript untuk mengelola data -->
-    <script src="app.js"></script>
-  </body>
+  <!-- JavaScript untuk mengelola data -->
+  <script src="app.js"></script>
+</body>
 </html>
